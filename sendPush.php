@@ -3,26 +3,24 @@
         $nombre = $_POST["nombre"];
         $content = $_POST["content"];
         $sql = "SELECT (GCM_ID) FROM GCM_IDS WHERE NOMBRE='".$nombre."'";
-        $GCM_ID = "APA91bGIU75h44XmnWwLj8ckFvQZTR-V8Edw2vWjRG12VP2XDpXMaLYwQxw_FCGU906BYXJvfq6TtCXefq9sRcC-IbxpMOFPmN11LYK3r1plLvLCsSnnaqfvyHVlwHNgBcKR3nZPwVrG4NmPPxo6ifEHP74xaxNaAg";
-   /**     
-        $con = mysqli("localhost","root","root","DB_GcmAndroidNights");
-        if ($con->connect_error) {
-            //die("Connection failed: " . $con->connect_error);
-            echo("error");
-        } 
+        $GCM_ID = [];
+        
+        $con = mysql_connect("localhost","root","root") or die(mysql_error());
+	mysql_select_db("DB_GcmAndroidNights",$con);
 
-        $result = mysql_query($sql, $con);
+        $result =  mysql_query($sql) or die(mysql_error());  
 
-        if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-                $GCM_ID = $row["GCM_ID"];
-            }*/
+        $registrationIDs = array();
+        $counter = 0;
+        while($row = mysql_fetch_array($result)) {
+            $registrationIDs[$counter] = $row["GCM_ID"];
+            $counter++;
+        }
             
+        if (count($registrationIDs) > 0) {
             $api_key = "AIzaSyCmNFLZC-3OQPMEvwp1635glTm1Ifr1-is";
-            $registrationIDs = array($GCM_ID);
             
-            $url = 'https://android.googleapis.com/gcm/send';
+            $url = 'http://android.googleapis.com/gcm/send';
             $fields = array(
                 'registration_ids'  => $registrationIDs,
                 'data'              => array( "message" => $content ),
@@ -40,10 +38,9 @@
             curl_close($ch);
  
             echo $result;
-      /*  } else {
-            echo "0 results";
+        } else {
+            echo "No hay ningun usuario llamado '".$nombre."', por lo tanto no se envio ningun mensaje.";
         }
-        $conn->close();
-*/
+        mysql_close();
         
 ?>

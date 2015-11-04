@@ -15,7 +15,7 @@ and open the template in the editor.
                 Enviar un mensaje a:<br>
                 <input type="text" name="nombre" id="nombre" required="true"/><br><br>
                 Con el contenido:<br>
-                <textarea id="content" value="content"></textarea><br>
+                <input type="text" name="content" id="content" required="true"/><br>
                 <input type="submit" value="enviar"/>
             </center>
         </form>
